@@ -7,25 +7,13 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     */
+    // 一覧
     public function index() {
         $posts = Post::all();
-        return view('posts.index', compact('posts'));
+        return response()->json($posts);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('posts.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // 作成
     public function store(Request $request)
     {
         // バリデーション
@@ -35,31 +23,18 @@ class PostController extends Controller
         ]);
 
         // データ保存
-        Post::create($validation);
+        $post = Post::create($validation);
 
-        // 一覧へリダイレクト
-        return redirect()->route('posts.index')->with('success','投稿を作成しました');
+        return response()->json($post, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // 詳細
     public function show(Post $post)
     {
-        return view('posts.show', compact('post'));
+        return response()->json($post);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
-    {
-        return view('posts.edit', compact('post'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
+    // 更新
     public function update(Request $request, Post $post)
     {
         // バリデーション
@@ -69,9 +44,9 @@ class PostController extends Controller
         ]);
 
         // データ更新
-        Post::update($validation);
+        $post->update($validation);
 
-        return redirect()->route('posts.index')->with('success','投稿を更新しました');
+        return response()->json($post);
     }
 
     /**
@@ -80,6 +55,6 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        return redirect()->route('posts.index')->with('success', '投稿を削除しました');
+        return response()->json(null, 204);
     }
 }

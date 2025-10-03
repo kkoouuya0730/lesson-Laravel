@@ -11,7 +11,14 @@ Route::get('/', function () {
 
 Route::get('/hello', [HelloController::class, 'index']);
 
-Route::resource('/posts', PostController::class);
+// Route::resource('/posts', PostController::class);
+Route::prefix('api')->group(function() {
+    Route::get('posts', [PostController::class, 'index']);
+    Route::post('posts', [PostController::class, 'store']);
+    Route::get('posts/{post}', [PostController::class, 'show']);
+    Route::put('posts/{post}', [PostController::class, 'update']);
+    Route::delete('posts/{post}', [PostController::class, 'destroy']);
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
