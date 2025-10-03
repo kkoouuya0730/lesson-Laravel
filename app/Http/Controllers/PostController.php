@@ -9,7 +9,7 @@ class PostController extends Controller
 {
     // 一覧
     public function index() {
-        $posts = Post::all();
+        $posts = Post::with('user')->get();
         return response()->json($posts);
     }
 
@@ -20,6 +20,7 @@ class PostController extends Controller
         $validation = $request->validate([
             'title' => 'required|max:255',
             'content' => 'nullable|string',
+            'user_id' => 'required|exists:users,id',
         ]);
 
         // データ保存
@@ -31,6 +32,7 @@ class PostController extends Controller
     // 詳細
     public function show(Post $post)
     {
+        $post->load('user');
         return response()->json($post);
     }
 
